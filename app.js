@@ -4,7 +4,8 @@ const cors = require("cors");
 require("./config/db.config")();
 
 const app = express();
-
+// test 2
+//TEST ROMULO
 //Elvis
 app.use(express.json());
 // Não esquecer de criar variável de ambiente com o endereço do seu app React (local ou deployado no Netlify)
