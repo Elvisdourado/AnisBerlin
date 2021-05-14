@@ -81,6 +81,10 @@ router.post("/login", async (req, res) => {
           email: user.email,
           _id: user._id,
           role: user.role,
+          AddressStreet: user.AddressStreet,
+          AddressNum: user.AddressNum,
+          AddressCity: user.AddressCity,
+          AddressPostalCode: user.AddressPostalCode,
         },
         token,
       });
