@@ -12,6 +12,7 @@ const TransactionSchema = new mongoose.Schema({
       { _id: false }
     ),
   ],
+  //fazer um setState (useEfect) para implementar um load fake
   timestamp: { type: Date, default: Date.now },
   status: {
     type: String,
