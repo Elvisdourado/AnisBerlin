@@ -13,7 +13,7 @@ const salt_rounds = 10;
 router.post("/signup", async (req, res) => {
   // Requisições do tipo POST tem uma propriedade especial chamada body, que carrega a informação enviada pelo cliente
   console.log(req.body);
-
+  
   try {
     // Recuperar a senha que está vindo do corpo da requisição
     const { password } = req.body;
@@ -60,7 +60,6 @@ router.post("/login", async (req, res) => {
 
     // Pesquisar esse usuário no banco pelo email
     const user = await UserModel.findOne({ email });
-
     console.log(user);
 
     // Se o usuário não foi encontrado, significa que ele não é cadastrado

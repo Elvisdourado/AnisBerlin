@@ -14,8 +14,13 @@ app.use(cors({ origin: process.env.REACT_APP_URL }));
 const userRouter = require("./routes/user.routes");
 app.use("/", userRouter);
 
+
+
+
 app.listen(Number(process.env.PORT), () =>
   console.log(`Server up and running at port ${process.env.PORT}`)
 );
 
 //jefferson inacio
+const productRouter = require("./routes/product.routes");
+app.use("/", productRouter);
