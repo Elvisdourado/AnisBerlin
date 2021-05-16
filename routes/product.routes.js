@@ -12,7 +12,7 @@ router.post(
     attachCurrentUser,
     uploadCloud.single('image'),
     (req, res) => {
-        if(!req.file) {
+        if (!req.file) {
             return res.status(500).json({ msg: 'No file uploaded' })
         }
         return res.status(201).json({ fileUrl: req.file.path })
@@ -27,14 +27,14 @@ router.post(
     isAdmin,
     async (req, res) => {
         console.log(req.body)
-        try{
-            if (!req.body.image_url){
+        try {
+            if (!req.body.image_url) {
                 delete req.body.image_url
             }
 
             const result = await ProductModel.create(req.body)
             return res.status(201).json(result)
-        } catch(err) {
+        } catch (err) {
             console.error(err)
             return res.status(500).json({ msg: JSON.stringify(err) })
         }
@@ -43,16 +43,16 @@ router.post(
 
 //READ ALL PRODUCTS
 router.get('/products', async (req, res) => {
-    try{
+    try {
         const result = await ProductModel.find()
         console.log(result)
 
-        if(result){
+        if (result) {
             return res.status(200).json(result)
         } else {
             return res.status(404).json({ msg: 'Product not found' })
-        } 
-    } catch(err) {
+        }
+    } catch (err) {
         console.error(err)
         return res.status(500).json({ msg: JSON.stringify(err) })
     }
@@ -60,7 +60,7 @@ router.get('/products', async (req, res) => {
 
 //READ ONE PRODUCT
 router.get('/products/:id', async (req, res) => {
-    try{
+    try {
         const { id } = req.params;
 
         const result = await (await ProductModel.findOne({ _id: id }))
@@ -70,12 +70,12 @@ router.get('/products/:id', async (req, res) => {
         // })
         console.log(result)
 
-        if (result){
-            return res.status(200).json({ ...result.toObject()})
+        if (result) {
+            return res.status(200).json({ ...result.toObject() })
         } else {
             return res.status(404).json({ msg: 'Product not found' })
         }
-    } catch(err) {
+    } catch (err) {
         console.error(err)
         return res.status(500).json({ msg: JSON.stringify(err) })
     }
@@ -84,7 +84,7 @@ router.get('/products/:id', async (req, res) => {
 //UPDATE PRODUCT FOR ADMIN
 router.put('/products/:id', isAuthenticated, attachCurrentUser, isAdmin,
     async (req, res) => {
-        try{    
+        try {
             const { id } = req.params
             const result = await ProductModel.findOneAndUpdate(
                 { _id: id },
@@ -98,7 +98,7 @@ router.put('/products/:id', isAuthenticated, attachCurrentUser, isAdmin,
             }
 
             return res.status(200).json(result)
-        } catch(err) {
+        } catch (err) {
             console.error(err)
             return res.status(500).json({ msg: JSON.stringify(err) })
         }
@@ -107,17 +107,17 @@ router.put('/products/:id', isAuthenticated, attachCurrentUser, isAdmin,
 //DELETE PRODUCT FOR ADMIN
 router.delete('/products/:id', isAuthenticated, attachCurrentUser, isAdmin,
     async (req, res) => {
-        try{
+        try {
             const { id } = req.params
             const result = await ProductModel.deleteOne({ _id: id })
             console.log(result)
 
-            if (result.n === 0){
+            if (result.n === 0) {
                 return res.status(404).json({ msg: 'Product not found' })
             }
 
             return res.status(200).json({})
-        } catch(err) {
+        } catch (err) {
             console.log(err)
             return res.status(500).json({ msg: JSON.stringify(err) })
         }

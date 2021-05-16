@@ -10,7 +10,8 @@ const ProductSchema = mongoose.Schema({
     vegan: { type: String, enum: ["yes", "no"], required: true },
     price: { type: Number, required: true },
     image_url: { type: String },
-    transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction'}]
+    // transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Transaction'}]
+    //erro nas transações
     
 })
 
