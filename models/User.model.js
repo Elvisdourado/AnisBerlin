@@ -22,6 +22,8 @@ const UserSchema = new Schema({
   AddressPostalCode: { type: String, required: true, trim: true },
   AddressState: { type: String, required: true, trim: true },
   AddressCountry: { type: String, required: true, trim: true },
+  neighbourhood: {type: String, required: true, trim: true },
+  phoneNumber: {type: String, required: true, trim: true}
   // transactions: [{ type: mongoose.Schema.Types.ObjectId, ref: "Transaction" }],
 });
 
