@@ -2,6 +2,12 @@ const router = require("express").Router();
 const TransactionModel = require("../models/Transaction.model");
 const UserModel = require("../models/User.model");
 const ProductModel = require("../models/Product.model");
+const isAuthenticated = require("../middlewares/isAuthenticated")
+const attachCurrentUser = require("../middlewares/attachCurrentUser")
+
+
+
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // Criar uma nova transação (compra)
 router.post("/transaction", async (req, res) => {
@@ -69,5 +75,96 @@ router.get("/transaction/:id", async (req, res) => {
     return res.status(500).json({ msg: JSON.stringify(err) });
   }
 });
+
+// Criar uma sessão de Checkout no Stripe
+router.post("/create-checkout-session", isAuthenticated, async (req, res) => {
+  // Array para segurar dados dos produtos
+  const line_items = [];
+
+  try {
+    // Antes de liberar a venda, verifica se tem quantidade em estoque
+    for (let product of req.body.products) {
+      const foundProduct = await ProductModel.findOne({
+        _id: product.productId,
+      });
+
+      if (product.qtt > foundProduct.qtt_in_stock) {
+        return res.status(403).json({ msg: "Not enough quantity in stock" });
+      }
+
+      // Esse formato de objeto é o formato requerido pela API do Stripe
+      line_items.push({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: foundProduct.name,
+            images: [foundProduct.image_url],
+          },
+          unit_amount: parseInt(foundProduct.price * 100),
+        },
+        quantity: product.qtt,
+      });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [...line_items],
+      mode: "payment",
+      success_url: `${process.env.REACT_APP_URL}/order/success`,
+      cancel_url: `${process.env.REACT_APP_URL}/order/canceled`,
+    });
+
+    return res.status(201).json({ id: session.id });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: "Failed to create checkout session." });
+  }
+});
+
+// Criar uma sessão de Checkout no Stripe
+router.post("/create-checkout-session", isAuthenticated, async (req, res) => {
+  // Array para segurar dados dos produtos
+  const line_items = [];
+
+  try {
+    // Antes de liberar a venda, verifica se tem quantidade em estoque
+    for (let product of req.body.products) {
+      const foundProduct = await ProductModel.findOne({
+        _id: product.productId,
+      });
+
+      if (product.qtt > foundProduct.qtt_in_stock) {
+        return res.status(403).json({ msg: "Not enough quantity in stock" });
+      }
+
+      // Esse formato de objeto é o formato requerido pela API do Stripe
+      line_items.push({
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: foundProduct.name,
+            images: [foundProduct.image_url],
+          },
+          unit_amount: parseInt(foundProduct.price * 100),
+        },
+        quantity: product.qtt,
+      });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [...line_items],
+      mode: "payment",
+      success_url: `${process.env.REACT_APP_URL}/order/success`,
+      cancel_url: `${process.env.REACT_APP_URL}/order/canceled`,
+    });
+
+    return res.status(201).json({ id: session.id });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ msg: "Failed to create checkout session." });
+  }
+});
+
 
 module.exports = router;
