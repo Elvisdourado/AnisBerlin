@@ -95,7 +95,7 @@ router.post("/create-checkout-session", isAuthenticated, async (req, res) => {
       // Esse formato de objeto é o formato requerido pela API do Stripe
       line_items.push({
         price_data: {
-          currency: "usd",
+          currency: "eur",
           product_data: {
             name: foundProduct.name,
             images: [foundProduct.image_url],
@@ -140,7 +140,7 @@ router.post("/create-checkout-session", isAuthenticated, async (req, res) => {
       // Esse formato de objeto é o formato requerido pela API do Stripe
       line_items.push({
         price_data: {
-          currency: "usd",
+          currency: "eur",
           product_data: {
             name: foundProduct.name,
             images: [foundProduct.image_url],
